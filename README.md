@@ -30,13 +30,13 @@ Clone the repo **recursively**, using:
 If you've already cloned the repo, run this command inside of the repository:
 ```git submodule update --init```
 
-## Follow the build steps
+## Getting dependencies
 
 ### Windows
-To handle dependencies, you'll need to install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) (make sure to install the `Desktop development with C++` package during the installation) and [vcpkg](https://github.com/microsoft/vcpkg#quick-start-windows).
+To handle dependencies, you'll need to install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) (make sure to install the `Desktop development with C++` package during the installation) and [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd#1---set-up-vcpkg) (You only need to follow `1 - Set up vcpkg`).
 
 After installing those, run the following in Command Prompt (make sure to replace `[vcpkg root]` with the path to the vcpkg installation!):
-- `[vcpkg root]/vcpkg.exe install libtheora libogg --triplet=x64-windows-static` (If you're compiling a 32-bit build, replace `x64-windows-static` with `x86-windows-static`.)
+- `[vcpkg root]/vcpkg.exe install libtheora libogg glew glfw3 sdl2 --triplet=x64-windows-static` (If you're compiling a 32-bit build, replace `x64-windows-static` with `x86-windows-static`.)
 
 Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static` as arguments for `cmake -B build`.
   - Make sure to replace `[vcpkg root]` with the path to the vcpkg installation!
@@ -52,7 +52,7 @@ Install the following dependencies: then follow the [compilation steps below](#c
 
 #### (make sure to [install GL shaders!](FAQ.md#q-why-arent-videosfilters-working-while-using-gl))
 
-## Switch
+### Switch
 [Setup devKitPro](https://devkitpro.org/wiki/Getting_Started), then run the following:
 - `(dkp-)pacman -Syuu switch-dev switch-libogg switch-libtheora switch-sdl2 switch-glad`
 
@@ -60,10 +60,10 @@ Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHA
 
 #### (make sure to [install GL shaders!](FAQ.md#q-why-arent-videosfilters-working-while-using-gl))
 
-## Android
+### Android
 Follow the android build instructions [here.](./dependencies/android/README.md)
 
-### Compiling
+## Compiling
 
 Compiling is as simple as typing the following in the root repository directory:
 ```
@@ -74,7 +74,7 @@ cmake --build build --config release
 The resulting build will be located somewhere in `build/` depending on your system.
 
 The following cmake arguments are available when compiling:
-- Use these on the `cmake -B build` step like so: `cmake -B build -DRETRO_DISABLE_PLUS=on`
+- Use these by adding `-D[flag-name]=[value]` to the end of the `cmake -B build` command. For example, to build with `RETRO_DISABLE_PLUS` set to on, add `-DRETRO_DISABLE_PLUS=on` to the command.
 
 ### RSDKv5 flags
 - `RETRO_REVISION`: What revision to compile for. Takes an integer, defaults to `3` (RSDKv5U).

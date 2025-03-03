@@ -5,8 +5,14 @@ A: Long story short, it's to minimize piracy and ensure an extra layer of legal 
 ### Q: How do I change the username?
 A: In the `Game` category of settings.ini, add a tag called `username` and enter the desired username in it.
 
+### Q: What's the difference between RSDKv5 and RSDKv5U?
+A: RSDKv5U adds compatibility for playing RSDKv3 (i.e. Sonic CD) and RSDKv4 (i.e. Sonic 1 & 2) games, including support for local multiplayer. The v5 side of the engine also recieves minor changes, such as altered collision and additional functionality.
+
 ### Q: The screen is tearing, how do I fix it?
 A: Try turning on VSync in settings.ini.
+
+### Q: I'm trying to use a non-Xbox controller on a Windows build, why isn't it working?
+A: The default DirectX backends for Windows only support XInput controllers (i.e. Xbox controllers), with no support for DirectInput. To use other controllers, you'll need to [build the decompilation](README.md#how-to-build) with the OpenGL backend by setting the [`RETRO_SUBSYSTEM` build flag](README.md#rsdkv5-flags) to `OGL`. It's also recommended to download a [gamecontrollerdb.txt](https://github.com/mdqinc/SDL_GameControllerDB/blob/master/gamecontrollerdb.txt) file and place it next to the executable file.
 
 ### Q: Why aren't videos/filters working while using GL?
 A: There's a mod for it that you have to make. Refer to the following directions:
@@ -32,15 +38,16 @@ TargetVersion=5
 A: Submit an issue in the Issues tab and we might look into it. Keep in mind that this is a decompilation, so bugs that exist in official releases will most likely not be fixed here.
 
 # Using Sonic Origins RSDK Files
+You can find a guide for fixing most of these issues [here](https://gamebanana.com/tuts/16686).
+
 ### Q: Why is there no audio?
-A: Sonic Origins doesn't have any music or sound effects contained in the games' data files, instead storing and handling all in-game audio itself through Hedgehog Engine 2. You can fix this by simply inserting the audio files from other versions of the games.
+A: Sonic Origins doesn't have any music or sound effects contained in the games' data files, instead storing and handling all in-game audio itself through Hedgehog Engine 2. You can fix this by simply inserting the audio files from other versions of the games. Sound effects new to Origins will have to be inserted manually.
 
 ### Q: Why is the Drop Dash disabled by default? How do I turn it on?
-A: By default, the game mode is set to Classic Mode, which disables the Drop Dash. The only way to change this is through a mod, either by changing the default value of the `game.playMode` global variable in `GameConfig.bin` or by setting the variable to another value via scripts.
+A: By default, the game mode is set to Classic Mode, which disables the Drop Dash. The only way to change this is through a mod.
 
 ### Q: How do I play as the Origins Plus characters?
-A: Sonic Team implemented Amy (and Knuckles in Sonic CD) in a way where they aren't playable on the decomp out of the box. This can be fixed via mods. **Do not ask about this in an issue, as we will not be able to help you.**
-There are also checks implemented in the engine to prevent playing as these characters on release builds and autobuilds.
+A: Sonic Team implemented the new characters in a way where they aren't playable on the decomp out of the box. This can be fixed via mods. There are also checks implemented in the engine to prevent playing as them on release builds and autobuilds.
 
 # Miscellaneous
 ### Q: Is there a decompilation for RSDKv3 and/or RSDKv4 alone?
