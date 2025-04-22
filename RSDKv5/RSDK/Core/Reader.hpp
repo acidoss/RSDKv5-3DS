@@ -85,11 +85,19 @@ extern char gameLogicName[0x200];
 
 extern bool32 useDataPack;
 
+#if RETRO_PLATFORM == RETRO_3DS
+extern bool32 useRomfs;
+#endif
+
 #if RETRO_REV0U
 void DetectEngineVersion();
 #endif
 bool32 LoadDataPack(const char *filename, size_t fileOffset, bool32 useBuffer);
 bool32 OpenDataFile(FileInfo *info, const char *filename);
+
+#if RETRO_PLATFORM == RETRO_3DS
+bool32 MountRomFS(const char* filePath);
+#endif
 
 enum FileModes { FMODE_NONE, FMODE_RB, FMODE_WB, FMODE_RB_PLUS };
 

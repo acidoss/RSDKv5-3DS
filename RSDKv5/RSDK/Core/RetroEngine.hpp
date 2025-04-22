@@ -572,7 +572,8 @@ extern "C" {
 #else
 // This is the way of including SDL that is recommended by the devs themselves:
 // https://wiki.libsdl.org/FAQDevelopment#do_i_include_sdl.h_or_sdlsdl.h
-#include "SDL.h"
+//#include "SDL.h"
+#include <SDL2/SDL.h>
 #endif
 #endif
 
@@ -621,6 +622,24 @@ extern "C" {
 #else
 #define ENGINE_VERSION (engine.version)
 #define ENGINE_V_NAME  "v5U"
+#endif
+
+#if RETRO_PLATFORM == RETRO_3DS
+extern const char* resultLevels[];
+extern const char* resultSummaries[];
+extern const char* resultDescriptions[];
+
+inline void PrintResultDescription(Result ret) {
+  s32 level = R_LEVEL(ret);
+  s32 summary = R_SUMMARY(ret);
+  s32 description = R_DESCRIPTION(ret);
+
+  RSDK::PrintLog(RSDK::PRINT_ERROR, 
+      "3DS module call failed. level: %s, summary: %s, description: %s",
+      resultLevels[level], resultSummaries[summary],
+      resultDescriptions[description]);
+}
+
 #endif
 
 namespace RSDK

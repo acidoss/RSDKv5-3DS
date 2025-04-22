@@ -310,8 +310,15 @@ void RSDK::LoadSettingsINI()
 #endif
 
         engine.devMenu = true;
+
+#if RETRO_PLATFORM == RETRO_3DS
+        if (MountRomFS(iniparser_getstring(ini, "Game:romfsFile", "Data.romfs")) ||
+            LoadDataPack(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
+          engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
+#else
         if (LoadDataPack(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
             engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
+#endif
 
 #if !RETRO_USE_ORIGINAL_CODE
         customSettings.region = iniparser_getint(ini, "Game:region", -1);
@@ -573,7 +580,13 @@ void RSDK::LoadSettingsINI()
         }
 
         SaveSettingsINI(true);
+#if RETRO_PLATFORM == RETRO_3DS
+        engine.devMenu = false;
+        if (!MountRomFS("Data.romfs"))
+          LoadDataPack("Data.rsdk", 0, useBuffer);
+#else
         engine.devMenu = LoadDataPack("Data.rsdk", 0, useBuffer);
+#endif
     }
 }
 

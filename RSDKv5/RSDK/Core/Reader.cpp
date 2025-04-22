@@ -12,6 +12,11 @@ char RSDK::gameLogicName[0x200];
 
 bool32 RSDK::useDataPack = false;
 
+#if RETRO_PLATFORM == RETRO_3DS
+bool32 RSDK::useRomfs = false;
+const char* romfsLabel = "data";
+#endif
+
 #if RETRO_REV0U
 void RSDK::DetectEngineVersion()
 {
@@ -164,6 +169,43 @@ bool32 RSDK::LoadDataPack(const char *filePath, size_t fileOffset, bool32 useBuf
     }
 }
 
+#if RETRO_PLATFORM == RETRO_3DS
+// referenced in mounting a RomFS from file:
+// https://github.com/ds-sloth/TheXTech3DS/blob/master/libs/AppPath/app_path.cpp#L83-L128
+bool32 RSDK::MountRomFS(const char* filePath) {
+  char romfsPath[0x100];
+  sprintf_s(romfsPath, sizeof(romfsPath), "%s%s", SKU::userFileDir, filePath);
+
+  Handle fd;
+
+  useRomfs = true;
+
+  FS_Path archPath = fsMakePath(PATH_EMPTY, "");
+  FS_Path fPath    = fsMakePath(PATH_ASCII, romfsPath);
+
+  Result ret = FSUSER_OpenFileDirectly(&fd, ARCHIVE_SDMC, archPath, fPath,
+                                       FS_OPEN_READ, 0);
+  if (ret) {
+    useRomfs = false;
+    PrintResultDescription(ret);
+    PrintLog(PRINT_NORMAL, "Failed to mount romfs: %s", filePath);
+    return false;
+  }
+
+  ret = romfsMountFromFile(fd, 0, romfsLabel);
+  if (ret) {
+    useRomfs = false;
+    PrintResultDescription(ret);
+    PrintLog(PRINT_NORMAL, "Failed to mount romfs: %s", filePath);
+    return false;
+  }
+
+  useDataPack = false;
+  return true;
+}
+
+#endif
+
 #if !RETRO_USE_ORIGINAL_CODE && RETRO_REV0U
 inline bool ends_with(std::string const &value, std::string const &ending)
 {
@@ -238,6 +280,7 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
         return false;
 
     char fullFilePath[0x100];
+    memset(fullFilePath, 0, 0x100 * sizeof(char));
     strcpy(fullFilePath, filename);
 
 #if RETRO_USE_MOD_LOADER
@@ -282,23 +325,14 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_ANDROID || RETRO_PLATFORM == RETRO_3DS
 
-#if RETRO_PLATFORM == RETRO_3DS
 #if RETRO_USE_MOD_LOADER
     addPath = true;
 #else
     bool32 addPath = true;
 #endif
-
-    /*
-    if (useDataPack)
-      addPath = false;
-    else
-      addPath = true;
-    */
-#endif
+    char pathBuf[0x100];
 
     if (addPath) {
-        char pathBuf[0x100];
         sprintf_s(pathBuf, sizeof(pathBuf), "%s%s", SKU::userFileDir, fullFilePath);
         sprintf_s(fullFilePath, sizeof(fullFilePath), "%s", pathBuf);
     }
@@ -307,7 +341,17 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 #endif // ! RETRO_PLATFORM
 #endif // ! RETRO_MOD_LOADER
 
-#if !RETRO_USE_ORIGNAL_CODE
+#if RETRO_PLATFORM == RETRO_3DS
+    char pathBuf[0x100];
+
+    if (useRomfs && !info->externalFile) {
+      sprintf_s(pathBuf, sizeof(pathBuf), "%s:/%s", romfsLabel, fullFilePath);
+      sprintf_s(fullFilePath, sizeof(fullFilePath), "%s", pathBuf);
+    } else if (!info->externalFile) {
+      sprintf_s(pathBuf, sizeof(pathBuf), "%s%s", SKU::userFileDir, fullFilePath);
+      sprintf_s(fullFilePath, sizeof(fullFilePath), "%s", pathBuf);
+    }
+#elif !RETRO_USE_ORIGNAL_CODE
     // somewhat hacky that also pleases the mod gods
     if (!info->externalFile) {
         char pathBuf[0x100];
