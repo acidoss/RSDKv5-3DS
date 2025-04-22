@@ -111,13 +111,7 @@ bool32 RSDK::LoadDataPack(const char *filePath, size_t fileOffset, bool32 useBuf
     FileInfo info;
 
     char dataPackPath[0x100];
-#if RETRO_PLATFORM == RETRO_3DS 
-    char trueDataPackPath[0x100];
-    sprintf_s(dataPackPath, (int32)sizeof(dataPackPath), "%s", filePath);
-    sprintf_s(trueDataPackPath, (int32)sizeof(trueDataPackPath), "%s%s", SKU::userFileDir, filePath);
-#else
     sprintf_s(dataPackPath, sizeof(dataPackPath), "%s%s", SKU::userFileDir, filePath);
-#endif
 
     InitFileInfo(&info);
     info.externalFile = true;
@@ -131,11 +125,7 @@ bool32 RSDK::LoadDataPack(const char *filePath, size_t fileOffset, bool32 useBuf
         ReadInt8(&info); // 'v'
         ReadInt8(&info); // version
 
-#if RETRO_PLATFORM == RETRO_3DS
-        strcpy(dataPacks[dataPackCount].name, trueDataPackPath);
-#else
         strcpy(dataPacks[dataPackCount].name, dataPackPath);
-#endif
 
         dataPacks[dataPackCount].fileCount = ReadInt16(&info);
         for (int32 f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
