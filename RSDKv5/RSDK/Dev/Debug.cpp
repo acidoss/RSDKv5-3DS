@@ -16,7 +16,7 @@ using namespace RSDK;
 
 bool32 RSDK::engineDebugMode = true;
 bool32 RSDK::useEndLine      = true;
-char RSDK::outputString[0x400];
+char RSDK::outputString[0x300];
 
 #if RETRO_REV02
 int32 RSDK::viewableVarCount = 0;
@@ -29,6 +29,11 @@ inline void PrintConsole(const char *message) { printf("%s", message); }
 
 void RSDK::PrintLog(int32 mode, const char *message, ...)
 {
+#if RETRO_PLATFORM == RETRO_3DS
+  if (!printToConsole)
+    return;
+#endif
+
 #ifndef RETRO_DISABLE_LOG
     if (engineDebugMode) {
         // make the full string
@@ -37,9 +42,7 @@ void RSDK::PrintLog(int32 mode, const char *message, ...)
 
         vsnprintf(outputString, sizeof(outputString), message, args);
         if (useEndLine)
-            sprintf(outputString, "%.*s\n", (int32)sizeof(outputString) - 1, outputString);
-        else
-            sprintf(outputString, "%.*s", (int32)sizeof(outputString) - 1, outputString);
+            snprintf(outputString, 0x400, "%s\n", outputString);
         va_end(args);
 
 #if RETRO_REV02
@@ -97,11 +100,10 @@ void RSDK::PrintLog(int32 mode, const char *message, ...)
             jbyteArray array = jni->env->NewByteArray(len); // as per research, this gets freed automatically
             jni->env->SetByteArrayRegion(array, 0, len, (jbyte *)outputString);
             jni->env->CallVoidMethod(jni->thiz, writeLog, array, as);
-#elif RETRO_PLATFORM == RETRO_SWITCH || RETRO_PLATFORM == RETRO_3DS
-
-#if RETRO_PLATFORM == RETRO_3DS 
+#elif RETRO_PLATFORM == RETRO_SWITCH
+            printf("%s", outputString);
+#elif RETRO_PLATFORM == RETRO_3DS
             if (printToConsole)
-#endif
               printf("%s", outputString);
 #endif
         }

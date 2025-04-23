@@ -31,7 +31,7 @@ enum TouchCornerButtons {
 
 extern bool32 engineDebugMode;
 extern bool32 useEndLine;
-extern char outputString[0x400];
+extern char outputString[0x300];
 
 void PrintLog(int32 mode, const char *message, ...);
 

@@ -215,6 +215,7 @@ enum GameRegions {
 #define RETRO_USERCORE_XB1   (RETRO_USERCORE_ID == 3)
 #define RETRO_USERCORE_NX    (RETRO_USERCORE_ID == 4)
 #define RETRO_USERCORE_EOS   (RETRO_USERCORE_ID == 5)
+#define RETRO_USERCORE_CTR   (RETRO_USERCORE_ID == 6)
 
 // ============================
 // ENGINE CONFIG
@@ -622,24 +623,6 @@ extern "C" {
 #else
 #define ENGINE_VERSION (engine.version)
 #define ENGINE_V_NAME  "v5U"
-#endif
-
-#if RETRO_PLATFORM == RETRO_3DS
-extern const char* resultLevels[];
-extern const char* resultSummaries[];
-extern const char* resultDescriptions[];
-
-inline void PrintResultDescription(Result ret) {
-  s32 level = R_LEVEL(ret);
-  s32 summary = R_SUMMARY(ret);
-  s32 description = R_DESCRIPTION(ret);
-
-  RSDK::PrintLog(RSDK::PRINT_ERROR, 
-      "3DS module call failed. level: %s, summary: %s, description: %s",
-      resultLevels[level], resultSummaries[summary],
-      resultDescriptions[description]);
-}
-
 #endif
 
 namespace RSDK

@@ -20,64 +20,6 @@ int32 *RSDK::globalVarsPtr = NULL;
 void (*RSDK::globalVarsInitCB)(void *globals) = NULL;
 #endif
 
-#if RETRO_PLATFORM == RETRO_3DS
-const char* resultLevels[] = {
-  "RL_SUCCESS",
-  "RL_INFO",
-  "RL_FATAL",
-  "RL_RESET",
-  "RL_REINITIALIZE",
-  "RL_USAGE",
-  "RL_PERMANENT",
-  "RL_TEMPORARY",
-  "RL_STATUS"
-};
-
-const char* resultSummaries[] = {
-  "success",
-  "nop",
-  "would block",
-  "out of resource",
-  "not found",
-  "invalid state",
-  "not supported",
-  "invalid argument",
-  "wrong argument",
-  "canceled",
-  "status changed",
-  "internal",
-  "invalid res value"
-};
-
-const char* resultDescriptions[] = {
-  "success",
-  "invalid result value",
-  "timeout",
-  "out of range",
-  "already exists",
-  "cancel requested",
-  "not found",
-  "already initialized",
-  "not initialized",
-  "invalid handle",
-  "invalid pointer",
-  "invalid address",
-  "not implemented",
-  "out of memory",
-  "misaligned size",
-  "misaligned address",
-  "busy",
-  "no data",
-  "invalid combination",
-  "invalid enum value",
-  "invalid size",
-  "already done",
-  "not authorized",
-  "too large",
-  "invalid selection"
-};
-#endif
-
 RetroEngine RSDK::engine = RetroEngine();
 
 int32 RSDK::RunRetroEngine(int32 argc, char *argv[])

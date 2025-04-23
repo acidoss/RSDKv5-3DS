@@ -37,8 +37,8 @@ else()
 endif()
 
 
-target_compile_options(RetroEngine PRIVATE -O2)
-target_compile_definitions(RetroEngine PRIVATE RETRO_DISABLE_LOG=1)
+target_compile_options(RetroEngine PRIVATE -Ofast)
+#target_compile_definitions(RetroEngine PRIVATE RETRO_DISABLE_LOG=0)
 target_link_libraries(RetroEngine ctru m)
 
 set(PLATFORM 3DS)

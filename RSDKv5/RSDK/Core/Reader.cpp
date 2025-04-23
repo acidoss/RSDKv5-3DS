@@ -187,16 +187,16 @@ bool32 RSDK::MountRomFS(const char* filePath) {
                                        FS_OPEN_READ, 0);
   if (ret) {
     useRomfs = false;
-    PrintResultDescription(ret);
-    PrintLog(PRINT_NORMAL, "Failed to mount romfs: %s", filePath);
+    //PrintResultDescription(ret);
+    //PrintLog(PRINT_NORMAL, "Failed to mount romfs: %s", filePath);
     return false;
   }
 
   ret = romfsMountFromFile(fd, 0, romfsLabel);
   if (ret) {
     useRomfs = false;
-    PrintResultDescription(ret);
-    PrintLog(PRINT_NORMAL, "Failed to mount romfs: %s", filePath);
+    //PrintResultDescription(ret);
+    //PrintLog(PRINT_NORMAL, "Failed to mount romfs: %s", filePath);
     return false;
   }
 
