@@ -9,13 +9,16 @@ static u32 remap[12] = {
   KEY_RIGHT,
   KEY_B,
   KEY_A,
-  NULL,
+  0,
   KEY_Y,
   KEY_X,
-  NULL,
+  0,
   KEY_START,
   KEY_SELECT
 };
+
+static touchPosition touchPos;
+static touchPosition touchPosPrev;
 
 void RSDK::SKU::InputDeviceCTR::UpdateInput()
 {
@@ -31,6 +34,22 @@ void RSDK::SKU::InputDeviceCTR::UpdateInput()
     mappings[i].down = kDown & remap[i];
     mappings[i].press = kHeld & remap[i];
   }
+
+  hidTouchRead(&touchPos);
+
+  if (RSDK::engineDebugMode) {
+    if (touchPos.px != touchPosPrev.px || touchPos.py != touchPosPrev.py) {
+      printToConsole = !printToConsole;
+
+      if (!printToConsole)
+        consoleClear();
+      else {
+        printf("Console log enabled!\n");
+      }
+    }
+  }
+
+  touchPosPrev = touchPos;
 }
 
 // TODO: the code below *technically* works, but is kind of a mess.
@@ -81,14 +100,22 @@ RSDK::SKU::InputDeviceCTR *RSDK::SKU::InitCTRDevice(uint32 id) {
   inputSlots[0] = device->id;
   inputSlotDevices[0] = device;
   device->isAssigned = true;
+
+  hidScanInput();
+  hidTouchRead(&touchPos);
+  hidTouchRead(&touchPosPrev);
   
   inputDeviceCount++;
   return device;
 }
 
 void RSDK::SKU::InitCTRInputAPI() {
+  // this is to get the compiler to shut up
+  char deviceName[12];
+  snprintf(deviceName, 12, "CTRDevice0");
+
   uint32 id = 1;
-  GenerateHashCRC(&id, "CTRDevice0");
+  GenerateHashCRC(&id, deviceName);
 
   inputDeviceCount = 0;
 

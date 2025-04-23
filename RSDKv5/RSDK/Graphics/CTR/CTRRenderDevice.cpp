@@ -14,10 +14,9 @@ float msElapsed;
 bool RenderDevice::Init()
 {
   gfxInitDefault();
+  consoleInit(GFX_BOTTOM, NULL);
 
   if (printToConsole) {
-    consoleInit(GFX_BOTTOM, NULL);
-
     // dummy out later maybe possibly
     printf("RSDKv5 3DS: RenderDevice init\n");
     printf("The programmer has a nap. Hold out!\nProgrammer!\n");
