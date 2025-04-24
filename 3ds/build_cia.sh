@@ -6,8 +6,8 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-APP_NAME="Sonic Mania"
-APP_AUTH="SaturnSH2x2, Rubberduckycooly"
+APP_NAME="SonicManiaDev"
+APP_AUTH="SaturnSH2x2"
 
 mkdir -p out
 rm -rf out/*
