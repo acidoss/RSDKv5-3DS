@@ -441,6 +441,12 @@ enum GameRegions {
 #endif
 #endif
 
+#if RETRO_PLATFORM == RETRO_3DS
+#define USE_SETVBUF (1)
+#else 
+#define USE_SETVBUF (0)
+#endif
+
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_UWP
 
 // All windows systems need windows API for LoadLibrary()
